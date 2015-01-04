@@ -38,7 +38,7 @@ var PersonView = Backbone.View.extend({
   tagName: 'li',
   className: 'person',
   //For the template here we used the template engine of UNDERSCORE
-  template : _.template('<%= name %> (<%= age %>) - <%= occupation %>'),
+  template : _.template( $('#personTemplate').html() ),
   initialize : function() {
     // initialize is the constructor method for backbone views
     this.render();
