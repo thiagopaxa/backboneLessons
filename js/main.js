@@ -29,5 +29,5 @@ var Thiago = new Person({age:24,name:'Thiagão',occupation:'Developer'})
 Person.prototype.on('error',function(model,error){
 
   console.log(error)
-  return false;
+  
 })
