@@ -26,8 +26,8 @@ var Person = Backbone.Model.extend({
 // 
 var Thiago = new Person({age:24,name:'Thiagão',occupation:'Developer'})
 
-Person.prototype.on('error',function(model,error){
+Person.prototype.on('invalid',function(model,error){
+  // on invalid is the listener that will return those messages within the validate method
+  console.error(error)
 
-  console.log(error)
-  
-})
+});
