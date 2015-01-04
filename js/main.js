@@ -23,7 +23,7 @@ var Person = Backbone.Model.extend({
     return this.get('name') + ' is now working';
   }
 })
-// 
+
 var Thiago = new Person({age:24,name:'Thiagão',occupation:'Developer'})
 
 Person.prototype.on('invalid',function(model,error){
@@ -31,3 +31,23 @@ Person.prototype.on('invalid',function(model,error){
   console.error(error)
 
 });
+
+var PersonView = Backbone.View.extend({
+  // at the view you can define 
+  // classes, ids and tag for the element of the view.
+  tagName: 'li',
+  className: 'person',
+  initialize : function() {
+    // initialize is the constructor method for backbone views
+    this.render();
+  },
+  render: function(){
+    
+    this.$el.html( this.model.get('name') + ' ('+ this.model.get('age') +'), '+ this.model.get('occupation'));
+  }
+
+});
+
+var thiagoView = new PersonView({model: Thiago});
+// now you can call the view for this with
+// thiagoView.el or thiagoView.$el (for jquery methods)
