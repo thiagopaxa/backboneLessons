@@ -37,13 +37,15 @@ var PersonView = Backbone.View.extend({
   // classes, ids and tag for the element of the view.
   tagName: 'li',
   className: 'person',
+  //For the template here we used the template engine of UNDERSCORE
+  template : _.template('<%= name %> (<%= age %>) - <%= occupation %>'),
   initialize : function() {
     // initialize is the constructor method for backbone views
     this.render();
   },
   render: function(){
     
-    this.$el.html( this.model.get('name') + ' ('+ this.model.get('age') +'), '+ this.model.get('occupation'));
+    this.$el.html( this.template( this.model.toJSON() ) );
   }
 
 });
