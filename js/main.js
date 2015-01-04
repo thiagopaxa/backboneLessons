@@ -39,13 +39,15 @@ var PersonView = Backbone.View.extend({
   className: 'person',
   //For the template here we used the template engine of UNDERSCORE
   template : _.template( $('#personTemplate').html() ),
+  
   initialize : function() {
     // initialize is the constructor method for backbone views
     this.render();
   },
   render: function(){
-    
+
     this.$el.html( this.template( this.model.toJSON() ) );
+  
   }
 
 });
