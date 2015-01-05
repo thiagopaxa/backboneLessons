@@ -1,3 +1,6 @@
+var templateMaker = function(id){
+  return _.template($('#' + id).html());
+}
 // Person Model
 var Person = Backbone.Model.extend({
   
@@ -30,7 +33,7 @@ var PersonView = Backbone.View.extend({
   
   tagName: 'li',
   className: 'person',
-  template : _.template( $('#personTemplate').html() ),
+  template : templateMaker('personTemplate'),
   
   render: function(){
     this.$el.html( this.template( this.model.toJSON() ) );
