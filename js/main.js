@@ -32,11 +32,28 @@ var PersonView = Backbone.View.extend({
   className: 'person',
   template : _.template( $('#personTemplate').html() ),
   
-  initialize : function() {
-    this.render();
-  },
   render: function(){
     this.$el.html( this.template( this.model.toJSON() ) );
+    return this;
+  }
+
+});
+
+// View For all people
+var PeopleView = Backbone.View.extend({
+  tagName: 'ul',
+  render: function(){
+    // this.collection is passed in the instance
+    // and the .each method is one of the many underscore built in helpers
+    this.collection.each(function(person){
+    
+      var personView = new PersonView({model:person})
+      this.$el.append(personView.render().el);
+    
+    },this); 
+    // 'this' is passed like a binding property
+    // to use the collection 'this', instead of the window 'this'
+    return this;
   }
 
 });
@@ -59,3 +76,8 @@ var people = new PeopleCollection([
     occupation: 'Dev'
   },
 ])
+
+var peopleView = new PeopleView({
+  collection: people
+});
+$('body').append(peopleView.render().el);
