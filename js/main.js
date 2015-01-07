@@ -10,91 +10,69 @@
   window.templateMaker = function(id){
     return _.template($('#' + id).html());
   };
-  
-  // Person Model
-  App.Models.Person = Backbone.Model.extend({
+
+  App.Models.Task = Backbone.Model.extend({});
+  App.Views.Task = Backbone.View.extend({
     
-    defaults: {
-      name: 'John Doe',
-      age: 33,
-      occupation: 'worker'
+    tagName : 'li',
+    
+    template: templateMaker('taskTemplate'),
+    
+    events:{
+      'click .edit' : 'editTask'
     },
     
-    validate : function(attrs){
-    
-      if ( Number(attrs.age) < 0 ){
-        return "The age must be positive, jackass.";
-      }
-      if ( ! attrs.name ){
-        return "Every Person should have a name";
-      }
+    editTask: function(){
+      var newTaskTitle = prompt("Would you like to edit this title?",this.model.get('title'))
+
+      if (newTaskTitle !== null) {
+        this.model.set('title',newTaskTitle);
+      };
+      //this is the result of the changes
+      console.log(this.model.toJSON());
     },
-
-    work : function(){
-      return this.get('name') + ' is now working';
-    }
-  })
-
-  // The collection of persons
-  App.Collections.People = Backbone.Collection.extend({
-    model: App.Models.Person
-  })
-  // View For a Person
-  App.Views.Person = Backbone.View.extend({
-    
-    tagName: 'li',
-    className: 'person',
-    template : templateMaker('personTemplate'),
     
     render: function(){
-      this.$el.html( this.template( this.model.toJSON() ) );
+      this.$el.html( this.template(this.model.toJSON()) );
       return this;
     }
 
   });
 
-  // View For all people
-  App.Views.People = Backbone.View.extend({
+  App.Collections.Tasks = Backbone.Collection.extend({
+    model : App.Models.Task
+  });
+  App.Views.Tasks = Backbone.View.extend({
     
     tagName: 'ul',
+    
+    addOne : function(task){
+      var taskModel = new App.Views.Task( {model : task });
+      this.$el.append(taskModel.render().el)
+    },
+    
     render: function(){
-      // this.collection is passed in the instance
-      // and the .each method is one of the many underscore built in helpers
-      this.collection.each(function(person){
-      
-        var personView = new App.Views.Person({model:person})
-        this.$el.append(personView.render().el);
-      
-      },this); 
-      // 'this' is passed like a binding property
-      // to use the collection 'this', instead of the window 'this'
+
+      this.collection.each(this.addOne, this);
+
       return this;
     }
-
-  });
-
-  // Collection instantiated
-  var people = new App.Collections.People([
+    
+  })
+  var tasksColl = new App.Collections.Tasks([
     {
-      name: 'Jorge',
-      age: 20,
-      occupation: 'pedreiro'
+      title: 'Go to the Mall',
+      priority: 2
     },
     {
-      name: 'Carlos',
-      age: 22,
-      occupation: 'farmaceutico'
+      title: 'Go to the Store',
+      priority: 4
     },
     {
-      name: 'Thiago',
-      age: 24,
-      occupation: 'Dev'
-    },
+      title: 'Go to Work',
+      priority: 5
+    }
   ])
-
-  var peopleView = new App.Views.People({
-    collection: people
-  });
-  $('body').append(peopleView.render().el);
-
+  var tasksView = new App.Views.Tasks({ collection : tasksColl});
+  $('body').append(tasksView.render().el)
 })();
