@@ -11,7 +11,13 @@
     return _.template($('#' + id).html());
   };
 
-  App.Models.Task = Backbone.Model.extend({});
+  App.Models.Task = Backbone.Model.extend({
+    validate: function(attrs){
+      if (! $.trim(attrs.title) ) {
+        return 'A task requires a valid Title';
+      };
+    }
+  });
   App.Views.Task = Backbone.View.extend({
     
     tagName : 'li',
@@ -22,12 +28,15 @@
       'click .edit' : 'editTask'
     },
     
+    initialize: function(){
+      this.model.on('change',this.render,this);
+    },
     editTask: function(){
       var newTaskTitle = prompt("Would you like to edit this title?",this.model.get('title'))
-
-      if (newTaskTitle !== null) {
-        this.model.set('title',newTaskTitle);
-      };
+      
+      if (!newTaskTitle) return;
+      
+      this.model.set('title',$.trim(newTaskTitle),{validate:true});
       //this is the result of the changes
       console.log(this.model.toJSON());
     },
