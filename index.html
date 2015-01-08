@@ -5,13 +5,22 @@
   <title>Connected Backbone</title>
 </head>
 <body>
+
+  <h1>My Tasks</h1>
+  <form id="addTask">
+    <input type="text" name="title" placeholder="New Task Title">
+    <button>Add Task</button>
+  </form>
+  <div class="tasks">  
+    
+    <script id="taskTemplate" type="text/template">
+        <span> <%= title %> </span> 
+        <button class="edit">Edit</button>
+        <button class="delete">Delete</button>
+    </script>
   
-  <script id="taskTemplate" type="text/template">
-      <span> <%= title %> </span> 
-      <button class="edit">Edit</button>
-      <button class="delete">Delete</button>
-  </script>
-  
+  </div>
+
   <script src="js/underscore.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/backbone.js"></script>

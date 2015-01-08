@@ -12,6 +12,11 @@
   };
 
   App.Models.Task = Backbone.Model.extend({
+    initialize: function(){
+      this.on('invalid',function(model,err){
+        console.error(err)
+      })
+    },
     validate: function(attrs){
       if (! $.trim(attrs.title) ) {
         return 'A task requires a valid Title';
@@ -64,6 +69,11 @@
     
     tagName: 'ul',
     
+    initialize: function(){
+      this.collection.on('add',this.addOne, this);
+
+    },
+    
     addOne : function(task){
       var taskModel = new App.Views.Task( {model : task });
       this.$el.append(taskModel.render().el)
@@ -77,6 +87,27 @@
     }
     
   })
+  
+  App.Views.addTask = Backbone.View.extend({
+    
+    el: '#addTask',
+    
+    events: {
+      'submit': 'submit'
+    },
+    submit: function(e){
+      
+      e.preventDefault();
+      var newTaskTitle = $(e.currentTarget).find(':text').val();
+      var newTask = new App.Models.Task().set( {'title': newTaskTitle},{validate:true});
+        if (newTask){
+
+        this.collection.add(newTask);
+      
+      }
+    }
+  });
+
   var tasksCollection = new App.Collections.Tasks([
     {
       title: 'Go to the Mall',
@@ -91,6 +122,9 @@
       priority: 5
     }
   ])
-  var tasksView = new App.Views.Tasks({ collection : tasksCollection});
-  $('body').append(tasksView.render().el)
+  var tasksView = new App.Views.Tasks({ collection: tasksCollection});
+  $('.tasks').append(tasksView.render().el)
+
+  var addTaskView = new App.Views.addTask({ collection: tasksCollection });
+
 })();
