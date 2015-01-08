@@ -25,11 +25,13 @@
     template: templateMaker('taskTemplate'),
     
     events:{
-      'click .edit' : 'editTask'
+      'click .edit' : 'editTask',
+      'click .delete' : 'destroyTask'
     },
     
     initialize: function(){
       this.model.on('change',this.render,this);
+      this.model.on('destroy',this.remove,this);
     },
     editTask: function(){
       var newTaskTitle = prompt("Would you like to edit this title?",this.model.get('title'))
@@ -40,7 +42,14 @@
       //this is the result of the changes
       console.log(this.model.toJSON());
     },
-    
+    destroyTask: function(){
+      this.model.destroy()
+      console.log(tasksCollection);
+
+    },
+    remove: function(){
+      this.$el.remove();
+    },
     render: function(){
       this.$el.html( this.template(this.model.toJSON()) );
       return this;
@@ -68,7 +77,7 @@
     }
     
   })
-  var tasksColl = new App.Collections.Tasks([
+  var tasksCollection = new App.Collections.Tasks([
     {
       title: 'Go to the Mall',
       priority: 2
@@ -82,6 +91,6 @@
       priority: 5
     }
   ])
-  var tasksView = new App.Views.Tasks({ collection : tasksColl});
+  var tasksView = new App.Views.Tasks({ collection : tasksCollection});
   $('body').append(tasksView.render().el)
 })();
