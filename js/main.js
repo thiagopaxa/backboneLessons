@@ -6,28 +6,30 @@
     Collections: {},
     Router: {}
   };
-
+  var vent = _.extend({},Backbone.Events);
   // A Router Lesson
+  App.Views.Appointment = Backbone.View.extend({
+    initialize: function(){
+      vent.on('appointment:show',this.appointmentShow,this);
+    },
+    appointmentShow: function(id){
+      console.log(id)
+    }
+  })
   App.Router = Backbone.Router.extend({
     routes:{
       '': 'index',
-      'show/:id': 'show',
-      'download/*filename': 'download',
-      '*other': 'default'
+      'appointment/:id': 'showAppointment'
     },
     index: function(){
-      console.log("Hi Router");
+      console.log('Index Page');    
     },
-    show: function(id){
-      console.log("Show id of "+ id);
-    },
-    default: function(other){
-      console.error('There is nothing here, you requested: ' + other);
-    },
-    download: function(filename){
-      console.log("You want the file: " + filename);
+    showAppointment: function(appointmentId){
+      vent.trigger('appointment:show',appointmentId);
     }
-  })
+  });
+  var view = new App.Views.Appointment();
   var router = new App.Router;
   Backbone.history.start();
+
 })();
